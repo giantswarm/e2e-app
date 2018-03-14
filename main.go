@@ -47,7 +47,7 @@ func main() {
 	}
 
 	go func() {
-		logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("running server at %s", server.Addr))
+		logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("running server at http://0.0.0.0:%s", Port))
 		err := server.ListenAndServe()
 		if IsServerClosed(err) {
 			// fall through
@@ -60,6 +60,11 @@ func main() {
 	signal.Notify(stopChan, syscall.SIGINT, syscall.SIGTERM)
 	<-stopChan
 
+	logger.LogCtx(ctx, "level", "debug", "message", "received termination signal")
+	logger.LogCtx(ctx, "level", "debug", "message", "draining server connections")
+
 	ctx, _ = context.WithTimeout(ctx, 5*time.Second)
 	server.Shutdown(ctx)
+
+	logger.LogCtx(ctx, "level", "debug", "message", "shutting down")
 }
