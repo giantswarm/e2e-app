@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -11,13 +12,31 @@ import (
 	"time"
 
 	"github.com/giantswarm/micrologger"
+	yaml "gopkg.in/yaml.v2"
 )
 
 const (
 	Port = "8080"
 )
 
+var (
+	description = "Application run for integration tests within a e2e test environment on Kubernetes."
+	gitCommit   = "n/a"
+	name        = "e2e-app"
+	source      = "https://github.com/giantswarm/e2e-app"
+)
+
 func main() {
+	if (len(os.Args) > 1) && (os.Args[1] == "version") {
+		d, err := yaml.Marshal(newVersionResponse())
+		if err != nil {
+			panic(err)
+		}
+		fmt.Printf("%s", d)
+
+		return
+	}
+
 	ctx := context.Background()
 	mux := http.NewServeMux()
 	logger, err := micrologger.New(micrologger.Config{})
@@ -26,8 +45,10 @@ func main() {
 	}
 
 	mux.Handle("/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		io.WriteString(w, "Hello World")
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(newVersionResponse())
 	}))
+
 	mux.Handle("/delay/1", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		time.Sleep(1 * time.Second)
 		io.WriteString(w, "Hello World")
