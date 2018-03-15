@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io"
 	"net/http"
@@ -34,6 +35,16 @@ func main() {
 		}
 		fmt.Printf("%s", d)
 
+		return
+	}
+
+	var lHelp bool
+	var sHelp bool
+	flag.BoolVar(&lHelp, "help", false, "Print help usage.")
+	flag.BoolVar(&sHelp, "h", false, "Print help usage.")
+	flag.Parse()
+	if lHelp || sHelp {
+		flag.Usage()
 		return
 	}
 
