@@ -1,0 +1,36 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: e2e-app
+  namespace: e2e
+  labels:
+    app: e2e-app
+spec:
+  replicas: 2
+  revisionHistoryLimit: 3
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: e2e-app
+    spec:
+      serviceAccountName: e2e-app
+      containers:
+      - name: e2e-app
+        image: quay.io/giantswarm/e2e-app:[[ .SHA ]]
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8000
+          initialDelaySeconds: 30
+          timeoutSeconds: 1
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+      imagePullSecrets:
+      - name: e2e-app-pull-secret
