@@ -2,7 +2,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: e2e-app
-  namespace: e2e
+  namespace: e2e-app
   labels:
     app: e2e-app
 spec:
@@ -15,7 +15,16 @@ spec:
       labels:
         app: e2e-app
     spec:
-      serviceAccountName: e2e-app
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: "app"
+                    operator: In
+                    values:
+                    - e2e-app
+              topologyKey: "kubernetes.io/hostname"
       containers:
       - name: e2e-app
         image: quay.io/giantswarm/e2e-app:[[ .SHA ]]
@@ -32,3 +41,4 @@ spec:
           limits:
             cpu: 100m
             memory: 100Mi
+      serviceAccountName: e2e-app
