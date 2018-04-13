@@ -2,7 +2,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: e2e-app
-  namespace: e2e
+  namespace: e2e-app
   labels:
     app: e2e-app
 spec:
