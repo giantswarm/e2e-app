@@ -24,7 +24,7 @@ spec:
                 operator: In
                 values:
                 - e2e-app
-            topologyKey: "kubernetes.io/hostname"
+            topologyKey: "kubernetes.io/ip"
       containers:
       - name: e2e-app
         image: quay.io/giantswarm/e2e-app:[[ .SHA ]]
