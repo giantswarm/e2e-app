@@ -18,12 +18,14 @@ spec:
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
                 matchExpressions:
-                  - key: "app"
-                    operator: In
-                    values:
-                    - e2e-app
+                - key: "app"
+                  operator: In
+                  values:
+                  - e2e-app
               topologyKey: "kubernetes.io/hostname"
       containers:
       - name: e2e-app
