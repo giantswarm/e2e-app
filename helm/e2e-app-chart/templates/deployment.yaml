@@ -9,7 +9,8 @@ spec:
   replicas: 2
   revisionHistoryLimit: 3
   strategy:
-    type: Recreate
+    type: RollingUpdate
+    maxUnavailable: 1
   template:
     metadata:
       labels:
