@@ -7,6 +7,9 @@ metadata:
     app: e2e-app
 spec:
   replicas: 2
+  selector:
+    matchLabels:
+      app: e2e-app
   revisionHistoryLimit: 3
   strategy:
     type: RollingUpdate
