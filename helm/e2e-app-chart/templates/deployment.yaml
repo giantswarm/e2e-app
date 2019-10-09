@@ -46,6 +46,6 @@ spec:
             cpu: 100m
             memory: 100Mi
       securityContext:
-        runAsUser: {{ .Values.userID }}
-        runAsGroup: {{ .Values.groupID }}
+        runAsUser: 1000
+        runAsGroup: 1000
       serviceAccountName: e2e-app
